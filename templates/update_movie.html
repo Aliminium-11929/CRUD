@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Movie</title>
+</head>
+<body>
+    <h2>Update Movie Information</h2>
+    
+    <!-- Success Message -->
+    {% if message %}
+        <p style="color: green;"><strong>{{ message }}</strong></p>
+    {% endif %}
+    
+    <!-- Error Message -->
+    {% if error %}
+        <p style="color: red;"><strong>{{ error }}</strong></p>
+    {% endif %}
+    
+    <!-- Updated Movie Info (if successful) -->
+    {% if movie %}
+        <h3>Updated Movie Details:</h3>
+        <p>
+            <strong>ID:</strong> {{ movie.MovieID }}<br>
+            <strong>Title:</strong> {{ movie.MovieTitle }}<br>
+            <strong>Actor 1:</strong> {{ movie.Actor1Name }}<br>
+            <strong>Actor 2:</strong> {{ movie.Actor2Name }}<br>
+            <strong>Director:</strong> {{ movie.DirectorName }}<br>
+            <strong>Genre:</strong> {{ movie.MovieGenre }}<br>
+            <strong>Release Year:</strong> {{ movie.ReleaseYear }}<br>
+        </p>
+    {% endif %}
+    
+    <!-- Update Form -->
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Update Movie</button>
+    </form>
+    
+    <a href="/"><button>Back to Home</button></a>
+    
+    <!-- List of Existing Movies -->
+    {% if M %}
+        <h3>Existing Movies:</h3>
+        {% for movie in M %}
+            <p>
+                <strong>ID:</strong> {{ movie.MovieID }} - 
+                {{ movie.MovieTitle }} ({{ movie.ReleaseYear }})
+            </p>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

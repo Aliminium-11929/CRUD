@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Movie</title>
+</head>
+<body>
+    <h2>Add Movie</h2>
+
+    {% for Movie in M %}
+        <p>
+            {{ Movie.MovieID }}<br>
+            {{ Movie.MovieTitle }}<br>
+            {{ Movie.Actor1Name }}<br>
+            {{ Movie.Actor2Name }}<br>
+            {{ Movie.DirectorName }}<br>
+            {{ Movie.MovieGenre }}<br>
+            {{ Movie.ReleaseYear }}<br>
+        </p>
+    {% endfor %}
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <a href="/"><button>Back to Home</button></a>
+</body>
+</html>
