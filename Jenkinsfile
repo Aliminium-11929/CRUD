@@ -27,14 +27,9 @@ pipeline{
         stage('Deploy to Minikube'){
             steps{
                 bat """
-                REM === Delete any existing Django pods to avoid rollout issues ===
-                kubectl delete pod -l app=django-app --ignore-not-found
-
-                REM === Apply deployment and service manifests ===
                 kubectl apply -f deployment.yaml --validate=false
                 kubectl apply -f service.yaml --validate=false
-
-                REM === Ensure rollout completes, timeout 180s ===
+                kubectl rollout restart deployment/django-deployment
                 kubectl rollout status deployment/django-deployment --timeout=180s
                 """
             }
