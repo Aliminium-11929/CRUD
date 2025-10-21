@@ -28,14 +28,10 @@ pipeline{
         stage('Deploy to Minikube'){
             steps{
                 bat """
-                echo === Applying Kubernetes Deployment ===
                 kubectl apply -f deployment.yaml --validate=false
-
-                echo === Applying Service ===
                 kubectl apply -f service.yaml --validate=false
-
-                echo === Waiting for Rollout Completion ===
-                kubectl rollout status deployment/django-deployment --timeout=90s
+                kubectl rollout restart deployment/django-deployment
+                kubectl rollout status deployment/django-deployment --timeout=180s
                 """
             }
         }
