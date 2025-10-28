@@ -1,9 +1,5 @@
 pipeline{
     agent any
-    environment {
-        KUBECONFIG = 'C:\\ProgramData\\Jenkins\\.kube\\config'
-        CHCP = '65001'
-    }
     triggers {
         pollSCM('H/2 * * * *')
     }
@@ -17,8 +13,8 @@ pipeline{
             steps {
                 bat """
                 REM === Switch Docker to Minikube Docker ===
-                @FOR /F "tokens=*" %%i IN ('minikube -p minikube docker-env --shell=cmd') DO %%i
-
+                call minikube docker-env --shell=cmd > docker_env.bat
+                call docker_env.bat
                 REM === Build Django image inside Minikube Docker ===
                 docker build -t mydjangoapp:latest .
                 """
@@ -27,10 +23,10 @@ pipeline{
         stage('Deploy to Minikube'){
             steps{
                 bat """
-                kubectl apply -f deployment.yaml --validate=false
-                kubectl apply -f service.yaml --validate=false
-                kubectl rollout restart deployment/django-deployment
-                kubectl rollout status deployment/django-deployment --timeout=180s
+                REM === Apply the updated deployment manifest ===
+                kubectl apply -f deployment.yaml
+                REM === Ensure the rollout completes ===
+                kubectl rollout status deployment/django-deployment
                 """
             }
         }
@@ -40,7 +36,7 @@ pipeline{
             echo "✅ Deployment successful!"
         }
         failure {
-            echo "❌ Deployment failed — check Minikube or kubeconfig path."
+            echo "❌ Deployment failed."
         }
     }
 }
